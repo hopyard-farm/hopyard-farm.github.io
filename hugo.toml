@@ -7,7 +7,7 @@ disableKinds = ["section", "taxonomy", "RSS", "sitemap"]
 disableHugoGeneratorInject = true
 
 # for Github deployment
-caches]
+[caches]
   [caches.images]
     dir = ':cacheDir/images'
 
