@@ -1,7 +1,7 @@
 # Site settings
 baseURL = "https://hopyardfarm.org"
 languageCode = "en-US"
-title = "Split - HTML Template Demo"
+title = "Hopyard Farm"
 theme = "split"
 disableKinds = ["section", "taxonomy", "RSS", "sitemap"]
 disableHugoGeneratorInject = true
@@ -11,7 +11,7 @@ relativeURLs = true
 uglyURLs = true
 
 # Copyright
-copyright = "&copy;2024 Your Name"
+copyright = "&copy;2025 Hopyard Farm LLC, Graton CA<br>"
 
 [services]
   [services.googleAnalytics]
@@ -21,10 +21,10 @@ copyright = "&copy;2024 Your Name"
 [params]
 
   # Metadata for search engines and social sharing
-  author = "Jenny Jones"
-  description = "Split is a centrally-divided layout for a professional online presence with a big image or video left with alongside content."
+  author = "Douglas Eck"
+  description = "Hopyard Farm is located in Graton, California."
   shareImage = "images/social.jpg"
-  twitterHandle = "onepagelove"
+  twitterHandle = "douglaseck"
 
   # Whether you purchased the license from the author.
   licensed = false
@@ -42,10 +42,10 @@ copyright = "&copy;2024 Your Name"
       position = "center center"
 
     # Video
-    [params.visual.video]
-      enable = false
-      mute = true
-      file = "videos/background.mp4"
+    #[params.visual.video]
+    #  enable = false
+    #  mute = true
+    #  file = "videos/background.mp4"
       # youtubeId = "dk9uNWPP7EA"
 
   # Links
@@ -54,20 +54,10 @@ copyright = "&copy;2024 Your Name"
   [[params.links]]
     [params.links.list1]
       heading = "Connect"
-
-      [[params.links.list1.link]]
-        text = "Blog"
-        url = "#"
-        new_tab = true # new tab
-
       [[params.links.list1.link]]
         text = "Email"
-        url = "#"
+        url = "mailto:amie@hopyardfarm.org"
         new_tab = false # Default, open at same tab
-
-      [[params.links.list1.link]]
-        text = "Newsletter"
-        url = "#"
 
   # Links List #2
   [[params.links]]
@@ -75,33 +65,8 @@ copyright = "&copy;2024 Your Name"
       heading = "Social"
 
       [[params.links.list2.link]]
-        text = "Twitter"
-        url = "#"
-
-      [[params.links.list2.link]]
         text = "Instagram"
-        url = "#"
-
-      [[params.links.list2.link]]
-        text = "Dribbble"
-        url = "#"
-
-  # Links List #3
-  [[params.links]]
-    [params.links.list3]
-      heading = "Network"
-
-      [[params.links.list3.link]]
-        text = "Link One"
-        url = "#"
-
-      [[params.links.list3.link]]
-        text = "Link Two"
-        url = "#"
-
-      [[params.links.list3.link]]
-        text = "Link Three"
-        url = "#"
+        url = "https://instagram.com/hopyard_farm"
 
   # The original template is released under the Creative Commons Attribution 3.0 License.
   # Please keep the original attribution link when using for your own project.

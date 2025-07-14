@@ -1,5 +1,6 @@
 +++
-date = '2025-07-13T20:58:25-07:00'
+date = '2025-07-13T21:18:30-07:00'
 draft = true
-title = ''
+title = 'Hopyard Farms'
+tagline = 'Regenrative agriculture in Graton, California'
 +++
