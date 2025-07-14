@@ -1,2 +1,2 @@
 # hopyard-farm.github.io
-Website for hopyardfarm.org
+Just update index.html to update the site.
