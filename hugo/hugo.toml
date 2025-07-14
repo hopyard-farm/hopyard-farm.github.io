@@ -11,7 +11,7 @@ relativeURLs = true
 uglyURLs = true
 
 # Copyright
-copyright = "&copy;2024-2025 Hopyard Farm LLC, Graton CA<br>"
+copyright = "&copy;2025 Hopyard Farm LLC, Graton CA<br>"
 
 [services]
   [services.googleAnalytics]
@@ -55,9 +55,9 @@ copyright = "&copy;2024-2025 Hopyard Farm LLC, Graton CA<br>"
     [params.links.list1]
       heading = "Connect"
       [[params.links.list1.link]]
-        text = "Emailgo"
-        url = '<a href="mailto://amie@hopyardfarm.org">Email boo</a>'
-        new_tab = false # Default, open at same tab
+        text = "Email"
+        url = 'mailto:amie@hopyardfarm.org'
+        new_tab = true # Default, open at same tab
 
   # Links List #2
   [[params.links]]
@@ -67,7 +67,8 @@ copyright = "&copy;2024-2025 Hopyard Farm LLC, Graton CA<br>"
       [[params.links.list2.link]]
         text = "Instagram"
         url = "https://instagram.com/hopyard_farm"
-
+        new_tab = true # Default, open at same tab
+	
   # The original template is released under the Creative Commons Attribution 3.0 License.
   # Please keep the original attribution link when using for your own project.
   # If you'd like to use the template without the attribution, you can check out

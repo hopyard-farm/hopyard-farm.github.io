@@ -1,6 +1,6 @@
 +++
 date = '2025-07-13T21:32:27-07:00'
-draft = true
+draft = false
 title = 'Long Text'
 +++
 
