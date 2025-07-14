@@ -6,6 +6,11 @@ theme = "hugo-split-theme"
 disableKinds = ["section", "taxonomy", "RSS", "sitemap"]
 disableHugoGeneratorInject = true
 
+# for Github deployment
+caches]
+  [caches.images]
+    dir = ':cacheDir/images'
+
 # Local preview mode
 relativeURLs = true
 uglyURLs = true
