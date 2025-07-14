@@ -1,6 +1,3 @@
-[submodule "quickstart/themes/ananke"]
-	path = hugo/themes/ananke
-	url = https://github.com/theNewDynamic/gohugo-theme-ananke.git
 [submodule "quickstart/themes/split"]
 	path = hugo/themes/split
 	url = https://github.com/escalate/hugo-split-theme.git
