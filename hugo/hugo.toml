@@ -2,7 +2,7 @@
 baseURL = "https://hopyardfarm.org"
 languageCode = "en-US"
 title = "Hopyard Farm"
-theme = "split"
+theme = "hugo-split-theme"
 disableKinds = ["section", "taxonomy", "RSS", "sitemap"]
 disableHugoGeneratorInject = true
 
@@ -11,7 +11,7 @@ relativeURLs = true
 uglyURLs = true
 
 # Copyright
-copyright = "&copy;2025 Hopyard Farm LLC, Graton CA<br>"
+copyright = "&copy;2024-2025 Hopyard Farm LLC, Graton CA<br>"
 
 [services]
   [services.googleAnalytics]
@@ -55,8 +55,8 @@ copyright = "&copy;2025 Hopyard Farm LLC, Graton CA<br>"
     [params.links.list1]
       heading = "Connect"
       [[params.links.list1.link]]
-        text = "Email"
-        url = "mailto:amie@hopyardfarm.org"
+        text = "Emailgo"
+        url = '<a href="mailto://amie@hopyardfarm.org">Email boo</a>'
         new_tab = false # Default, open at same tab
 
   # Links List #2
