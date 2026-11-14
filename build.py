@@ -668,7 +668,7 @@ def render_site(data: dict, farmer_text: str = "") -> str:
       <div class="footer-inner">
         <div class="footer-brand">
           <h2>Hopyard Farm, LLC</h2>
-          <p>{esc(site.get("address", "2590 Edison Street, Graton, CA 95444"))} · {esc(barnstand.get("hours", "Thursdays · 2:00 PM – Sunset"))}</p>
+          <p>{esc(site.get("address", "2590 Edison Street, Graton, CA 95444"))}</p>
         </div>
 
         <div class="footer-links">
