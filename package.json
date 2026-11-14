@@ -1,0 +1,11 @@
+{
+  "name": "hopyard-farm-website",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Hopyard Farm website (hopyardfarm.org) — Regenerative & Organic Farm in Graton, Sonoma County, CA",
+  "scripts": {
+    "build": "python3 build.py",
+    "dev": "python3 build.py --serve --port 8080",
+    "start": "python3 build.py --serve --port 8080"
+  }
+}

@@ -1,0 +1,122 @@
+# ============================================================================
+# HOPYARD FARM WEBSITE CONTENT (content/farm.toml)
+# ============================================================================
+# Edit this file to update the Hopyard Farm website (https://hopyardfarm.org).
+# After saving changes, run `python3 build.py` locally or commit to GitHub.
+# ============================================================================
+
+[site]
+title = "Hopyard Farm"
+tagline = "Regenerative & Organic Farm in Graton, California"
+description = "Hopyard Farm is a family-owned organic and regenerative farm in Graton, Sonoma County, California. Visit our Barnstand on Thursdays from 2:00 PM to sunset at 2590 Edison Street."
+url = "https://hopyardfarm.org"
+address = "2590 Edison Street, Graton, CA 95444"
+email_primary = "amie@hopyardfarm.org"
+instagram_handle = "@hopyard_farm"
+instagram_url = "https://www.instagram.com/hopyard_farm/"
+copyright_year = "2026"
+
+# Logos & key images (located in static/images/)
+logo_icon = "/images/transparent rabbit.png"
+hero_image = "/images/instagram/hero-sunrise.jpg"
+
+# ============================================================================
+# 1. BARNSTAND HOURS & LOCATION
+# ============================================================================
+[barnstand]
+heading = "Barnstand Thursdays!"
+status = "Open Weekly"
+hours = "Thursdays · 2:00 PM – Sunset"
+address = "2590 Edison Street, Graton, CA"
+note = "Walk or bike right up from the West County Regional Trail (or park on Grey Street at the north end of Railroad Ave), or drive right in to 2590 Edison Street."
+interior_image = "/images/instagram/barnstand-interior.jpg"
+
+# ============================================================================
+# 2. GET TO KNOW YOUR FARMER
+# ============================================================================
+[farmer]
+heading = "Get to Know Your Farmer"
+name = "Amie Neff"
+image = "/images/amie tractor.jpg"
+
+# ============================================================================
+# 3. 50% TRANSPARENCY PHOTO BACKDROP (from Farmstand album)
+# ============================================================================
+[backdrop]
+photos = [
+  "/images/farmstand/PXL_20261015_210408938.jpg",
+  "/images/farmstand/PXL_20261023_162738868.jpg",
+  "/images/farmstand/PXL_20260901_202647885.MP.jpg",
+  "/images/farmstand/PXL_20260823_214358055.MP.jpg",
+  "/images/farmstand/PXL_20260828_214256657.MP.jpg",
+  "/images/farmstand/PXL_20261108_212233254.MP.jpg",
+  "/images/farmstand/PXL_20261101_023304098.jpg",
+  "/images/farmstand/IMG_20251031_085039.jpg",
+  "/images/farmstand/PXL_20260921_162837358.jpg"
+]
+
+# ============================================================================
+# 3. 3x3 INSTAGRAM PHOTO GRID (9 PHOTOS)
+# Clicking or hovering any photo links directly to the Instagram original.
+# ============================================================================
+[[photos]]
+image = "/images/instagram/barnstand-interior.jpg"
+alt = "Inside the Hopyard Farm Barnstand in Graton"
+ig_url = "https://www.instagram.com/p/DeheHDIGsjf/"
+
+[[photos]]
+image = "/images/instagram/carnival-winter-squash.jpg"
+alt = "Carnival winter squash harvest"
+ig_url = "https://www.instagram.com/p/DcjjwmUj2bE/"
+
+[[photos]]
+image = "/images/instagram/sunflowers-bouquet.jpg"
+alt = "Fresh sunflowers from Hopyard Farm"
+ig_url = "https://www.instagram.com/p/DdcbI05EihG/"
+
+[[photos]]
+image = "/images/instagram/pasture-jersey-cows.jpg"
+alt = "Jersey cows rotationally grazing on pasture"
+ig_url = "https://www.instagram.com/p/Dc4Mhu3GjJf/"
+
+[[photos]]
+image = "/images/instagram/charentais-melons.jpg"
+alt = "Charentais and heirloom melons"
+ig_url = "https://www.instagram.com/p/DdKFP-rj8Cl/"
+
+[[photos]]
+image = "/images/instagram/lacinato-kale.jpg"
+alt = "Organic Lacinato kale"
+ig_url = "https://www.instagram.com/p/DcUI6uPkun2/"
+
+[[photos]]
+image = "/images/instagram/heirloom-eggplant.jpg"
+alt = "Heirloom eggplants"
+ig_url = "https://www.instagram.com/p/DeheHDIGsjf/"
+
+[[photos]]
+image = "/images/instagram/sweet-peppers.jpg"
+alt = "Sweet peppers harvest"
+ig_url = "https://www.instagram.com/p/DeheHDIGsjf/"
+
+[[photos]]
+image = "/images/instagram/autumn-pumpkins.jpg"
+alt = "Pumpkins at the Hopyard Farm Barnstand"
+ig_url = "https://www.instagram.com/p/DfFsS2LPjz3/"
+
+# ============================================================================
+# 4. OPTIONAL ONLINE STORE (Hidden while `enabled = false`)
+# Flip `enabled = true` later if you'd like to display items for pre-order.
+# ============================================================================
+[store]
+enabled = false
+heading = "Farmstand Pre-Orders"
+subtitle = "Reserve online for Thursday Barnstand pickup (2:00 – 6:00 PM at 2590 Edison Street, Graton)."
+
+[[store.products]]
+name = "Weekly Harvest Box"
+price = "$35"
+description = "A seasonal mix of fresh-picked organic vegetables, greens, herbs, and fruit."
+image = "/images/instagram/farmstand-table.jpg"
+checkout_url = "mailto:amie@hopyardfarm.org?subject=Harvest%20Box%20Reservation"
+cta_text = "Reserve Box"
