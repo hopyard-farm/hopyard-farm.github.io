@@ -8,10 +8,13 @@ Reads `content/farm.toml` and `content/farmer.txt` and builds `public/`.
 import argparse
 import html
 import http.server
+import json
 import os
 import shutil
 import socketserver
+import ssl
 import tomllib
+import urllib.request
 from pathlib import Path
 
 
@@ -21,11 +24,92 @@ def esc(val) -> str:
     return html.escape(str(val), quote=True)
 
 
+def _norm_url(u: str) -> str:
+    return (u or "").strip().rstrip("/")
+
+
+def fetch_behold_photos(feed_url: str, fallback_photos: list, default_ig_url: str) -> list:
+    """Fetch up to 9 recent Instagram posts from Behold JSON feed, padding to 9 with fallbacks."""
+    items = []
+    if feed_url:
+        raw_bytes = None
+        req = urllib.request.Request(feed_url, headers={"User-Agent": "HopyardFarmBuilder/1.0"})
+        try:
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                raw_bytes = resp.read()
+        except Exception:
+            try:
+                ctx = ssl._create_unverified_context()
+                with urllib.request.urlopen(req, timeout=8, context=ctx) as resp:
+                    raw_bytes = resp.read()
+            except Exception as exc:
+                print(f"Note: Could not fetch Behold feed at build time ({exc}); using fallback photos.")
+
+        if raw_bytes:
+            try:
+                payload = json.loads(raw_bytes.decode("utf-8"))
+                posts = payload if isinstance(payload, list) else payload.get("posts", [])
+                for post in posts:
+                    if len(items) >= 9:
+                        break
+                    sizes = post.get("sizes") or {}
+                    children = post.get("children") or []
+                    child_sizes = (children[0].get("sizes") or {}) if children else {}
+                    img_url = (
+                        (sizes.get("large") or {}).get("mediaUrl")
+                        or (sizes.get("medium") or {}).get("mediaUrl")
+                        or (child_sizes.get("large") or {}).get("mediaUrl")
+                        or (child_sizes.get("medium") or {}).get("mediaUrl")
+                        or post.get("thumbnailUrl")
+                        or post.get("mediaUrl")
+                        or ""
+                    )
+                    if not img_url:
+                        continue
+                    caption_raw = (post.get("prunedCaption") or post.get("caption") or "").strip()
+                    first_line = next((ln.strip() for ln in caption_raw.splitlines() if ln.strip()), "")
+                    alt_txt = (first_line[:110] + "…") if len(first_line) > 110 else (first_line or "Hopyard Farm on Instagram")
+                    permalink = post.get("permalink") or default_ig_url
+                    items.append({"image": img_url, "alt": alt_txt, "ig_url": permalink})
+            except Exception as exc:
+                print(f"Note: Failed parsing Behold JSON ({exc}); using fallback photos.")
+
+    seen_urls = {_norm_url(x.get("ig_url", "")) for x in items if x.get("ig_url")}
+    seen_imgs = {x.get("image", "") for x in items}
+
+    for fb in fallback_photos:
+        if len(items) >= 9:
+            break
+        fb_url = _norm_url(fb.get("ig_url", ""))
+        fb_img = fb.get("image", "")
+        if fb_url and fb_url in seen_urls:
+            continue
+        if fb_img in seen_imgs:
+            continue
+        items.append(fb)
+        if fb_url:
+            seen_urls.add(fb_url)
+        seen_imgs.add(fb_img)
+
+    for fb in fallback_photos:
+        if len(items) >= 9:
+            break
+        if fb.get("image", "") not in seen_imgs:
+            items.append(fb)
+            seen_imgs.add(fb.get("image", ""))
+
+    return items[:9]
+
+
 def render_site(data: dict, farmer_text: str = "") -> str:
     site = data.get("site", {})
     barnstand = data.get("barnstand", {})
     farmer = data.get("farmer", {})
-    photos = data.get("photos", [])[:9]
+    fallback_photos = data.get("photos", [])[:9]
+    default_ig_url = site.get("instagram_url", "https://www.instagram.com/hopyard_farm/")
+    behold_feed_url = site.get("behold_feed_url", "").strip()
+    photos = fetch_behold_photos(behold_feed_url, fallback_photos, default_ig_url)
+    fallback_photos_json = json.dumps(fallback_photos).replace("</", "<\\/")
     store = data.get("store", {})
 
     if farmer_text.strip():
@@ -41,7 +125,7 @@ def render_site(data: dict, farmer_text: str = "") -> str:
     for p in photos:
         img_src = esc(p.get("image", ""))
         alt_txt = esc(p.get("alt", "Hopyard Farm photo"))
-        ig_url = esc(p.get("ig_url", site.get("instagram_url", "https://www.instagram.com/hopyard_farm/")))
+        ig_url = esc(p.get("ig_url", default_ig_url))
         photos_grid_html += f"""
           <a href="{ig_url}" target="_blank" rel="noopener" class="photo-tile" aria-label="{alt_txt} — View on Instagram">
             <img src="{img_src}" alt="{alt_txt}" loading="lazy">
@@ -647,7 +731,7 @@ def render_site(data: dict, farmer_text: str = "") -> str:
       <div class="container">
         <div class="panel-box">
           <h2 class="section-title" style="margin-bottom: 0;">From the Farm</h2>
-          <div class="photo-grid">
+          <div id="photoGrid" class="photo-grid" data-behold-url="{esc(behold_feed_url)}" data-default-ig="{esc(default_ig_url)}">
             {photos_grid_html}
           </div>
           <div class="photos-footer">
@@ -699,6 +783,101 @@ def render_site(data: dict, farmer_text: str = "") -> str:
         }});
       }})
       .catch(() => {{}});
+
+    (function () {{
+      const grid = document.getElementById('photoGrid');
+      const beholdUrl = grid && grid.dataset.beholdUrl;
+      if (!grid || !beholdUrl) return;
+
+      const defaultIg = grid.dataset.defaultIg || 'https://www.instagram.com/hopyard_farm/';
+      const fallbackPhotos = {fallback_photos_json};
+      const normUrl = u => (u || '').trim().replace(/\\/+$/, '');
+
+      fetch(beholdUrl)
+        .then(res => res.ok ? res.json() : null)
+        .then(payload => {{
+          if (!payload) return;
+          const posts = Array.isArray(payload) ? payload : (payload.posts || []);
+          const items = [];
+
+          for (const post of posts) {{
+            if (items.length >= 9) break;
+            const sizes = post.sizes || {{}};
+            const child0 = (post.children && post.children[0]) || {{}};
+            const childSizes = child0.sizes || {{}};
+            const imgUrl = (sizes.large && sizes.large.mediaUrl)
+              || (sizes.medium && sizes.medium.mediaUrl)
+              || (childSizes.large && childSizes.large.mediaUrl)
+              || (childSizes.medium && childSizes.medium.mediaUrl)
+              || post.thumbnailUrl
+              || post.mediaUrl
+              || '';
+            if (!imgUrl) continue;
+
+            const rawCap = (post.prunedCaption || post.caption || '').trim();
+            const firstLine = (rawCap.split(/\\r?\\n/).map(s => s.trim()).find(Boolean)) || '';
+            const altTxt = firstLine.length > 110
+              ? firstLine.slice(0, 110) + '…'
+              : (firstLine || 'Hopyard Farm on Instagram');
+            items.push({{
+              image: imgUrl,
+              alt: altTxt,
+              ig_url: post.permalink || defaultIg
+            }});
+          }}
+
+          if (!items.length) return;
+
+          const seenUrls = new Set(items.map(x => normUrl(x.ig_url)).filter(Boolean));
+          const seenImgs = new Set(items.map(x => x.image));
+
+          for (const fb of fallbackPhotos) {{
+            if (items.length >= 9) break;
+            const u = normUrl(fb.ig_url);
+            if ((u && seenUrls.has(u)) || seenImgs.has(fb.image)) continue;
+            items.push(fb);
+            if (u) seenUrls.add(u);
+            seenImgs.add(fb.image);
+          }}
+
+          for (const fb of fallbackPhotos) {{
+            if (items.length >= 9) break;
+            if (!seenImgs.has(fb.image)) {{
+              items.push(fb);
+              seenImgs.add(fb.image);
+            }}
+          }}
+
+          grid.innerHTML = '';
+          items.slice(0, 9).forEach(item => {{
+            const a = document.createElement('a');
+            a.href = item.ig_url || defaultIg;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.className = 'photo-tile';
+            a.setAttribute('aria-label', (item.alt || 'Hopyard Farm photo') + ' — View on Instagram');
+
+            const img = document.createElement('img');
+            img.src = item.image;
+            img.alt = item.alt || 'Hopyard Farm photo';
+            img.loading = 'lazy';
+
+            const overlay = document.createElement('div');
+            overlay.className = 'photo-overlay';
+            overlay.innerHTML = '<span class="photo-overlay-pill">'
+              + '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'
+              + '<rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>'
+              + '<path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>'
+              + '<line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>'
+              + 'View on Instagram &nearr;</span>';
+
+            a.appendChild(img);
+            a.appendChild(overlay);
+            grid.appendChild(a);
+          }});
+        }})
+        .catch(() => {{}});
+    }})();
   </script>
 </body>
 </html>

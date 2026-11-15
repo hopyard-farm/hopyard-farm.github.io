@@ -14,6 +14,7 @@ address = "2590 Edison Street, Graton, CA 95444"
 email_primary = "amie@hopyardfarm.org"
 instagram_handle = "@hopyard_farm"
 instagram_url = "https://www.instagram.com/hopyard_farm/"
+behold_feed_url = "https://feeds.behold.so/OGU7xhWyPN7MwEHPDQhW"
 copyright_year = "2026"
 
 # Logos & key images (located in static/images/)
